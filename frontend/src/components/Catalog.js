@@ -5,7 +5,7 @@ function Catalog({ token }) {
 
   useEffect(() => {
     fetch('/product/', {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` }
     })
     .then(response => response.json())
     .then(data => setProducts(data));

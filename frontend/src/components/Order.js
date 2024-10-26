@@ -7,7 +7,7 @@ function Order({ token }) {
     const response = await fetch('/order/', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({ product_id: productID })

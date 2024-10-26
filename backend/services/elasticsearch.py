@@ -1,5 +1,5 @@
 from elasticsearch import Elasticsearch
-from config import Config
+from ..config import Config
 
 es = Elasticsearch([Config.ELASTICSEARCH_URL])
 

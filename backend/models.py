@@ -1,4 +1,4 @@
-from app import db
+from app import db  # Import db from backend/__init__.py
 from werkzeug.security import generate_password_hash, check_password_hash
 
 class User(db.Model):
@@ -20,6 +20,14 @@ class Product(db.Model):
     name = db.Column(db.String(100), nullable=False)
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(200))
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'price': self.price,
+            'description': self.description,
+        }
 
 class Order(db.Model):
     __tablename__ = 'orders'
@@ -27,3 +35,11 @@ class Order(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('products.id'), nullable=False)
     status = db.Column(db.String(50), default="Pending")
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'product_id': self.product_id,
+            'status': self.status,
+        }

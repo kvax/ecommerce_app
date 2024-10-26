@@ -6,10 +6,10 @@ import Order from './components/Order';
 import Admin from './components/Admin';
 
 function App() {
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token, setToken] = useState(localStorage.getItem('token'));
 
   const saveToken = (userToken) => {
-    localStorage.setItem("token", userToken);
+    localStorage.setItem('token', userToken);
     setToken(userToken);
   };
 
@@ -25,7 +25,7 @@ function App() {
             <Route exact path="/catalog">
               <Catalog token={token} />
             </Route>
-            <Route exact path="/order">
+            <Route exact path="/orders">
               <Order token={token} />
             </Route>
             <Route exact path="/admin">

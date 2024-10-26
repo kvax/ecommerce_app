@@ -6,7 +6,7 @@ function Admin({ token }) {
 
   useEffect(() => {
     fetch('/product/', {
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` }
     })
     .then(response => response.json())
     .then(data => setProducts(data));
@@ -16,7 +16,7 @@ function Admin({ token }) {
     const response = await fetch('/product/', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(newProduct)

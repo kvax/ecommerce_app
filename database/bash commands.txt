@@ -1,0 +1,69 @@
+docker network create flask_network
+
+docker run -d \
+  --name mysql-db \
+  --network flask_network \
+  -e MYSQL_ROOT_PASSWORD=rootpassword \
+  -e MYSQL_DATABASE=ecommerce_db \
+  -e MYSQL_USER=flaskuser \
+  -e MYSQL_PASSWORD=flaskpassword \
+  -v "$(pwd)/mysql_data:/var/lib/mysql" \
+  mysql:latest
+
+docker run -d \
+  --name flask-backend \
+  --network flask_network \
+  -p 5000:5000 \
+  flask-backend
+
+docker run -d \
+  --name react-frontend \
+  --network flask_network \
+  -p 80:80 \
+  react-frontend-nginx
+
+
+docker exec -it mysql-db mysql -uflaskuser -p
+# Enter password 'flaskpassword' when prompted
+
+# Inside MySQL, confirm the 'ecommerce_db' database and tables
+USE ecommerce_db;
+SHOW TABLES;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password_hash VARCHAR(256) NOT NULL,
+    role ENUM('admin', 'customer') NOT NULL
+);
+
+CREATE TABLE products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    description VARCHAR(255)
+);
+
+CREATE TABLE orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    status VARCHAR(50) DEFAULT 'Pending',
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+
+curl -XGET http://localhost:5000
+
+curl -XPOST http://localhost:5000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "Admin", "password": "AdminPass", "role": "admin"}'
+  
+curl -XPOST http://localhost:5000/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"username": "Customer", "password": "CustomerPass", "role": "customer"}'
+
+curl -XPOST http://flask-backend:5000/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "Customer", "password": "CustomerPass"}'

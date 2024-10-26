@@ -1,7 +1,8 @@
 from flask import Blueprint, request, jsonify
-from models import db, Product
+from models import Product
+from app import db  # Import db from backend/__init__.py
 from flask_jwt_extended import jwt_required, get_jwt_identity
-from services.elasticsearch import index_product, search_product
+# from ..services.elasticsearch import index_product, search_product
 
 product_blueprint = Blueprint('product', __name__)
 
@@ -9,7 +10,7 @@ product_blueprint = Blueprint('product', __name__)
 def get_catalog():
     query = request.args.get('query')
     if query:
-        results = search_product(query)
+        results = query #search_product(query)
         return jsonify(results)
     products = Product.query.all()
     return jsonify([product.to_dict() for product in products])
@@ -25,5 +26,5 @@ def add_product():
     new_product = Product(name=data['name'], price=data['price'], description=data['description'])
     db.session.add(new_product)
     db.session.commit()
-    index_product(new_product.to_dict())
+    #index_product(new_product.to_dict())
     return jsonify(new_product.to_dict()), 201
