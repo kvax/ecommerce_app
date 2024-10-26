@@ -1,0 +1,34 @@
+# flask-backend/values.yaml
+
+# Image configuration for Flask backend
+image:
+  repository: "drkvax/flask-backend"  # Replace with your Docker image path
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+# Flask service configuration
+service:
+  type: LoadBalancer
+  port: 5000  # Flask backend typically listens on port 5000
+
+# Environment variables for the backend
+env:
+  FLASK_ENV: "production"
+  DATABASE_URL: "<database-url>"
+  JWT_SECRET_KEY: "<your-secret-key>"
+
+# Resource requests and limits for the backend
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 250m
+    memory: 256Mi
+
+# Autoscaling configuration (optional)
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80
